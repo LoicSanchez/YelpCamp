@@ -1,9 +1,8 @@
-var mongoose    =   require("mongoose");
 var Campground  =   require("./models/campground");
 var Comment     =   require("./models/comment");
 var User        =   require("./models/user");
 
-var data = [
+var seeds = [
     {
         name: "Salmon Creek",
         image: "https://farm1.staticflickr.com/82/225912054_690e32830d.jpg",
@@ -46,68 +45,30 @@ var data = [
     }
 ];
  
-function seedDB(){
-   //Remove all campgrounds
-   Campground.deleteMany({}, function(err){
-        if(err){
-            console.log(err);
+async function seedDB(){
+    try {
+        //Remove all comments
+        await Comment.deleteMany({});
+        console.log('Removed comments');
+        //Remove all campgrounds
+        await Campground.deleteMany({});
+        console.log('Removed campgrounds');
+        
+        for (const seed of seeds){
+            let campground = await Campground.create(seed);
+            console.log('Created a new campground');
+            let comment = await Comment.create({
+                text: 'This place is great, but I wish there was internet',
+                author: 'Homer'});
+            console.log('Created a new comment');
+            campground.comments.push(comment);
+            campground.save();
+            console.log('Added comment to campground');
         }
-        console.log("removed campgrounds!");
-        Comment.deleteMany({}, function(err) {
-            if(err){
-                console.log(err);
-            }
-            console.log("removed comments!");
-             //add a few campgrounds
-            data.forEach(function(seed){
-                Campground.create(seed, function(err, campground){
-                    if(err){
-                        console.log(err);
-                    } else {
-                        console.log("added a campground");
-                        // User.findOne({username: "admin"}, function(err, user){
-                        //     if (err){
-                        //         console.log(err);
-                        //     } else if (user) {
-                        //         console.log("Found user admin");
-                        //         var author = {
-                        //             id: user._id,
-                        //             username: user.username
-                        //         };
-                        //         campground.author = author;
-                        //         //added author
-                        //     } else {
-                        //         console.log("Creating user admin");
-                        //         User.register(new User({username: "admin"}), "123", function(err, newUser){
-                        //             var author = {
-                        //                 id: newUser._id,
-                        //                 username: newUser.username
-                        //             };
-                        //             campground.author = author;
-                        //             //added author
-                        //         });
-                        //     }
-                        // });
-                        // //create a comment
-                        Comment.create(
-                            {
-                                text: "This place is great, but I wish there was internet",
-                                author: "Homer"
-                            }, function(err, comment){
-                                if(err){
-                                    console.log(err);
-                                } else {
-                                    campground.comments.push(comment);
-                                    campground.save();
-                                    console.log("Created new comment");
-                                }
-                            });
-                    }
-                });
-            });
-            
-        });
-    });
+        
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 module.exports = seedDB;

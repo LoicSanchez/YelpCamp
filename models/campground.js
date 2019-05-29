@@ -16,6 +16,7 @@ var campgroundSchema = new mongoose.Schema({
          ref: "Comment"
       }
     ],
-    price: Number
+    price: Number,
+    created: {type: Date, default: Date.now}
 });
 module.exports = mongoose.model("Campground", campgroundSchema);
