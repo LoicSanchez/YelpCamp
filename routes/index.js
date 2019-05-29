@@ -53,4 +53,9 @@ router.get("/logout", function(req, res) {
     res.redirect("/campgrounds");
 });
 
+//forgot route
+router.get('/forgot', function(req, res){
+	res.render('auth/forgot');
+});
+
 module.exports = router;
