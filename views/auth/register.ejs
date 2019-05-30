@@ -4,28 +4,27 @@
     <div style="width: 40%; margin: 30px auto;">
         <form action="/register" method="POST">
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="username">Username</label>
-                <div class="col-sm-9">
-                    <input type="text" name="username" placeholder="Username" class="form-control">
-                </div>
+                <label  for="username">Username</label>
+                <input type="text" name="username" placeholder="Username" autofocus class="form-control">
+                <small id="usernameHelp" class="form-text text-muted">Username will be shown for posts and comments you create.</small>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="password">Password</label>
-                <div class="col-sm-9">
-                    <input type="password" name="password" placeholder="Password" class="form-control">
-                </div>
+                <label for="email">Email</label>
+                <input type="email" name="email" placeholder="Email" class="form-control">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else. Email is used to reset your password.</small>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="adminCode">Admin code</label>
-                <div class="col-sm-9">
-                    <input type="text" name="adminCode" placeholder="Admin code" class="form-control">
-                </div>
+                <label for="password">Password</label>
+                <input type="password" name="password" placeholder="Password" class="form-control">
+                <small id="passwordHelp" class="form-text text-muted">Password are safely encrypted in our database but make sure to use a unique password for each website.</small>
             </div>
             <div class="form-group row">
-                <div class="col-sm-3"></div>
-                <div class="col-sm-9">
-                    <button class="btn btn-primary btn-block">Submit</button>
-                </div>
+                <label for="adminCode">Admin code</label>
+                <input type="text" name="adminCode" placeholder="Admin code" class="form-control">
+                <small id="adminHelp" class="form-text text-muted">If you have one, enter the code to create an admin user otherwise, leave blank.</small>
+            </div>
+            <div class="form-group row">
+                <button class="btn btn-primary btn-block">Submit</button>
             </div>
         </form>
     <a href="/campgrounds">Go Back</a>
