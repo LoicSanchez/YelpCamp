@@ -1,5 +1,6 @@
 var Campground  =   require("../models/campground"),
-    Comment     =   require("../models/comment");
+    Comment     =   require("../models/comment"),
+    User        =   require("../models/user");
 
 var middlewareObj = {};
 
@@ -60,4 +61,28 @@ middlewareObj.isLoggedIn = function (req, res, next){
     res.redirect("/login");
 };
 
+
+middlewareObj.checkUserOwnership = function (req, res, next){
+    if(req.isAuthenticated()){
+        User.findById(req.params.id, function(err, foundUser){
+            if (err) {
+                req.flash("error", err.message);
+                res.redirect("back");
+            } else {
+                if (!foundUser) {
+                    req.flash("error", "User not found");
+                    return res.redirect("back");
+                } 
+                if (foundUser._id.equals(req.user._id)){
+                    return next();
+                } else {
+                    req.flash("error", "You can only view your profile");
+                    res.redirect("back"); 
+                }
+            }
+        });
+    }
+};
+
+                
 module.exports = middlewareObj;

@@ -1,0 +1,39 @@
+<% include ../partials/header %>
+<div class="container">
+    <div class="row mt-2">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"><%=user.username%></h4>
+                    <h6 class="card-subtitle mb-2 text-muted"><%=user.firstName%> <%=user.lastName%></h6>
+                    <h6 class="card-subtitle mb-2 text-muted"><%=user.email%></h6>
+                    <p class="card-text">Welcome to your profile page. Click Edit to update your personal information. You can view all the campgrounds and comments that you created on the right side.</p>
+                    <a class="btn btn-info btn-sm" href="/users/<%=user._id%>/edit">Edit</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">
+                    Campgrounds
+                </div>
+                <ul class="list-group list-group-flush">
+                    <%campgrounds.forEach(function(campground){ %>
+                        <li class="list-group-item"><strong><a href="/campgrounds/<%=campground._id%>"><%=campground.name%></a></strong> <span class="float-right"><small><%= moment(campground.created).fromNow() %></small></span></li>
+                    <%})%>
+                </ul>
+            </div>
+            <div class="card mt-2">
+                <div class="card-header">
+                    Comments
+                </div>
+                <ul class="list-group list-group-flush">
+                    <%comments.forEach(function(comment){ %>
+                        <li class="list-group-item"><strong><a href="#"><%=comment.text%></a></strong> <span class="float-right"><small><%= moment(comment.created).fromNow() %></small></span></li>
+                    <%})%>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<% include ../partials/footer %>

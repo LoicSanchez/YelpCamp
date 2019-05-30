@@ -3,7 +3,11 @@ var express     =   require("express"),
     async       =   require("async"),
     nodemailer  =   require("nodemailer"),
     crypto      =   require("crypto");
-var User        =   require("../models/user");
+var middleware  =   require("../middleware");
+var User        =   require("../models/user"),
+    Campground  =   require("../models/campground"),
+    Comment  =   require("../models/comment");
+    
 var router = express.Router();
 
 router.get("/", function(req, res) {
@@ -186,5 +190,41 @@ router.post('/reset/:token', function(req, res) {
         res.redirect('/campgrounds');
     });
 });
+
+
+//User profile route
+router.get('/users/:id', middleware.checkUserOwnership, function(req, res){
+    User.findById(req.params.id, async function(err, foundUser){
+        if(err){
+            req.flash("error", err.message);
+            res.redirect('/campgrounds');
+        } else {
+            let campgrounds = await Campground.find().where('author.id').equals(foundUser._id);
+            let comments = await Comment.find().where('author.id').equals(foundUser._id);
+            res.render('users/show', {user: foundUser, campgrounds, comments});
+        }
+    });
+});
+
+//EDIT route - Show edit form for User
+router.get("/users/:id/edit", middleware.checkUserOwnership, function(req, res) {
+    User.findById(req.params.id, function(err, foundUser){
+        res.render("users/edit", {user: foundUser});
+    });
+});
+
+//UPDATE route - Update User
+router.put("/users/:id", middleware.checkUserOwnership, function(req, res){
+    User.findByIdAndUpdate(req.params.id, req.body, function(err, updatedUser){
+        if (err) {
+            req.flash('error', err.message);
+            res.redirect("/users/" + req.params.id);
+        } else {
+            req.flash('success', 'User profile updated');
+            res.redirect("/users/" + req.params.id);
+        }
+    });
+});
+
 
 module.exports = router;
