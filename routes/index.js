@@ -41,12 +41,26 @@ router.post("/register", function(req, res){
 router.get("/login", function(req, res) {
     res.render("auth/login", {page: 'login'});
 });
-//Login logic with middleware
-router.post("/login", passport.authenticate("local", {
-    successRedirect: "/campgrounds",
-    failureRedirect: "/login",
-    failureFlash: true
-}), function(req, res){
+
+router.post('/login', function(req, res, next) {
+    passport.authenticate('local', {failureFlash: true}, function(err, user, info) {
+        if (err) { 
+            return next(err); 
+        }
+        if (!user) { 
+            req.flash('error', info.message);
+            return res.redirect('/login'); 
+        }
+        req.logIn(user, function(err) {
+            if (err) { 
+                return next(err); 
+            }
+            var redirectTo = req.session.redirectTo ? req.session.redirectTo : '/campgrounds';
+            delete req.session.redirectTo;
+            req.flash("success", "You are logged in");
+            res.redirect(redirectTo);
+        });
+    })(req, res, next);
 });
 
 //Logout routes
